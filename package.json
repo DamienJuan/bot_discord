@@ -1,0 +1,19 @@
+{
+  "name": "dlmp3",
+  "version": "1.0.0",
+  "main": "bot.js",
+  "license": "GPL-3.0",
+  "scripts": {
+    "dev": "nodemon bot.js"
+  },
+  "dependencies": {
+    "@discordjs/opus": "^0.3.2",
+    "@discordjs/voice": "^0.5.5",
+    "discord.js": "^13.6.0",
+    "ffmpeg-static": "^4.2.5",
+    "libsodium-wrappers": "^0.7.9"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
