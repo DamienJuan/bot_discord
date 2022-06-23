@@ -100,7 +100,7 @@ bot.on('ready', () => {
   if (!statusChannel) return console.error('The status channel does not exist! Skipping.');
   statusChannel.send({ embeds: [readyEmbed]});
 
-  voiceInit();
+  // voiceInit();
 
 });
 
