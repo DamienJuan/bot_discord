@@ -29,7 +29,7 @@ function voiceInit() {
 
     player.on('idle', () => {
       console.log("Music has finished playing, shuffling music...")
-      playAudio();
+      //playAudio();
     })
 
     connection.subscribe(player);
@@ -49,7 +49,8 @@ function playAudio() {
   }
 
   let resource = createAudioResource(join(__dirname, 'music/' + audio));
-
+  var seconds = (new Date()).getSeconds();
+  console.log(`PLAY PLAY PLAY!"${seconds}"`);
   player.play(resource);
 
   console.log('Now playing: ' + audio);
@@ -129,6 +130,8 @@ bot.on('messageCreate', async msg => {
   }
 
   if (command === 'play') {
+    var seconds = (new Date()).getSeconds();
+    console.log(`ENTER ENTER ENTER!"${seconds}"`);
     msg.reply('UWU for the win !');
     playAudio();
   }
