@@ -1,4 +1,5 @@
 const Discord = require('discord.js');
+const cron = require('cron');
 const fs = require('fs');
 const { join } = require('node:path');
 const { createAudioPlayer, createAudioResource, joinVoiceChannel, VoiceConnectionStatus, getVoiceConnection } = require('@discordjs/voice');
@@ -61,13 +62,15 @@ function playAudio() {
         console.log(err);
     });
   }
+  /*
   const statusEmbed = new Discord.MessageEmbed()
       .addField('Now Playing', `${audio}`)
       .setColor('#0066ff')
+    */
 
   let statusChannel = bot.channels.cache.get(config.statusChannel);
   if (!statusChannel) return console.error('The status channel does not exist! Skipping.');
-  statusChannel.send({embeds: [statusEmbed]});
+  //statusChannel.send({embeds: [statusEmbed]});
 
 }
 
@@ -91,14 +94,16 @@ bot.on('ready', () => {
   const activity = bot.presence.activities[0];
   console.log(`Updated bot presence to "${activity.name}"`);
 
+  /*
   const readyEmbed = new Discord.MessageEmbed()
     .setAuthor({name:bot.user.username, iconURL:bot.user.avatarURL()})
     .setDescription('Starting bot...')
     .setColor('#0066ff')
+  */
 
   let statusChannel = bot.channels.cache.get(config.statusChannel);
   if (!statusChannel) return console.error('The status channel does not exist! Skipping.');
-  statusChannel.send({ embeds: [readyEmbed]});
+  //statusChannel.send({ embeds: [readyEmbed]});
 
   // voiceInit();
 
@@ -115,7 +120,13 @@ bot.on('messageCreate', async msg => {
     const helpEmbed = new Discord.MessageEmbed()
       .setAuthor({name:`${bot.user.username} Help`, iconURL:bot.user.avatarURL()})
       .setDescription(`Currently playing \`${audio}\`.`)
-      .addField('Bot Owner Only', `${config.prefix}join\n${config.prefix}play\n${config.prefix}leave\n${config.prefix}stop\n`, true)
+      .addField(
+        'Public Commands',
+        `${config.prefix}join - Joins voice chat.\n
+        ${config.prefix}play - Plays the music in the music's folder.\n
+        ${config.prefix}leave - Leaves voice chat.\n
+        ${config.prefix}set_timer 58 29 19 - Schedules the start of the audio (respect the syntax).\n`
+      , true)
       .setFooter({text:'Rpz Coubo, Helzak & Alberto.'})
       .setColor('#0066ff')
 
@@ -125,19 +136,28 @@ bot.on('messageCreate', async msg => {
   //if (![config.botOwner].includes(msg.author.id)) return;
 
   if (command === 'join') {
-    msg.reply('Joining voice channel.');
+    //msg.reply('Joining voice channel.');
     voiceInit();
   }
 
   if (command === 'play') {
     var seconds = (new Date()).getSeconds();
     console.log(`ENTER ENTER ENTER!"${seconds}"`);
-    msg.reply('UWU for the win !');
+    //msg.reply('UWU for the win !');
     playAudio();
   }
 
+  if (msg.content.startsWith(`${config.prefix}set_timer`)) {
+    var timer = msg.content.substr(`${config.prefix}set_timer `.length);
+    console.log(timer);
+    let scheduledMessage = new cron.CronJob(`${timer} * * *`, () => {
+      playAudio();
+    });
+    scheduledMessage.start()
+  }
+
   if (command === 'leave') {
-    msg.reply('Leaving voice channel.');
+    //msg.reply('Leaving voice channel.');
     console.log('Leaving voice channel.');
     if (txtFile === true) {
       fileData = "Now Playing: Nothing";
@@ -152,7 +172,7 @@ bot.on('messageCreate', async msg => {
     connection.destroy();
 
   }
-
+  /*
   if (command === 'stop') {
     await msg.reply('Powering off...');
     if (txtFile === true) {
@@ -162,9 +182,10 @@ bot.on('messageCreate', async msg => {
           console.log(err);
       });
     }
+    
     const statusEmbed = new Discord.MessageEmbed()
       .setAuthor({name:bot.user.username, iconURL:bot.user.avatarURL()})
-      .setDescription(`That\'s all folks! Powering down ${bot.user.username}...`)
+      .setDescription(`You killed ${bot.user.username}...`)
       .setColor('#0066ff')
     let statusChannel = bot.channels.cache.get(config.statusChannel);
     if (!statusChannel) return console.error('The status channel does not exist! Skipping.');
@@ -176,5 +197,6 @@ bot.on('messageCreate', async msg => {
     bot.destroy();
     process.exit(0);
   }
+  */
 
 });
